@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import "./index.css";
 import treeData from "./data.json";
 
-const TreeNode = ({ node }) => {
+const TreeNode = ({ node, level = 0 }) => {
 	const { label, children } = node;
 	return (
 		<>
-			<span>{label}</span>
+			<span>{label} {level}</span>
 			<br />
 			<ul>
 				{!!children.length &&
@@ -14,6 +14,7 @@ const TreeNode = ({ node }) => {
 						<TreeNode
 							key={childNode.label}
 							node={childNode}
+							level={level+1}
 						/>
 					))}
 			</ul>
