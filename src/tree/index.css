@@ -4,3 +4,10 @@
     padding: 10px;
     font-family: monospace
 }
+
+.visible {
+   display: block;
+}
+.invisible {
+    display: none;
+}
