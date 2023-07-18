@@ -3,16 +3,16 @@ import "./index.css";
 import treeData from "./data.json";
 
 const TreeNode = ({ node }) => {
-	const { label, key, children } = node;
+	const { label, children } = node;
 	return (
 		<>
-			<span>{key}</span><span>{label}</span>
+			<span>{label}</span>
 			<br />
 			<ul>
 				{!!children.length &&
 					children.map((childNode) => (
 						<TreeNode
-							key={childNode.key}
+							key={childNode.label}
 							node={childNode}
 						/>
 					))}
@@ -27,7 +27,7 @@ const Tree = () => {
 		<div className='tree'>
 			{tree.map((node) => (
 				<TreeNode
-					key={node.key}
+					key={node.label}
 					node={node}
 				/>
 			))}
