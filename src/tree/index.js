@@ -1,19 +1,22 @@
-import React, {useState, useEffect} from 'react';
-import './index.css'
-import axios from 'axios'
-
+import React from "react";
+import "./index.css";
 const Tree = () => {
-    return (
-            <div className="tree">
-                root<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;ant <br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;bear <br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cat <br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dog <br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elephant <br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;frog <br/>
-            </div>
-    )
-}
+	return (
+		<div className='tree'>
+			root
+			<br />
+			<ul>
+				ant <br />
+				bear
+				<ul>
+					cat <br />
+					dog
+					<ul>elephant</ul>
+				</ul>
+				frog
+			</ul>
+		</div>
+	);
+};
 
 export default Tree;
