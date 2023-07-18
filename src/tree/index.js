@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
-import treeData from "./data.json";
+import { axiosInstance } from "../axios/instance";
 import Node from "../entities/Node";
 
 // TODO -> Folder -> Constants
@@ -109,25 +109,72 @@ function findParentNodeByLabel(treeData, label, parent = null) {
 }
 
 const Tree = () => {
-	const [tree, setTree] = useState(treeData.tree);
+	const [tree, setTree] = useState([]);
+	const [isFetching, setIsFetching] = useState(true);
+	const [error, setError] = useState(null);
+
+	// Fetch Data from Bin
+	const fetchBin = () => {
+		axiosInstance
+			.get(`${process.env.REACT_APP_GET_BIN_ID}`)
+			.then((response) => {
+				if (response.status === 200) {
+					setTree(response.data.record.tree);
+					setIsFetching(false);
+				}
+			})
+			.catch((error) => setError(error.message || "Fetch Request Failed"));
+	};
+	useEffect(() => fetchBin(), []);
+
+	// Update Bin
+	const updateBin = () => {
+		axiosInstance
+			.put(`${process.env.REACT_APP_PUT_BIN_ID}`, JSON.stringify({ tree }), {
+				headers: {
+					"Content-Type": "application/json",
+					"X-Access-Key": "$2b$10$gruL3tCt/itdd5NUeXL7E.foff1/ZGCyj3cpFvL9nMgoWvMCXYJfW",
+				},
+			})
+			.then((response) => {
+				if (response.status === 200) {
+					// setTree(response.data.record.tree);
+					setIsFetching(false);
+				}
+			})
+			.catch((error) => setError(error.message || "Update Request Failed"));
+	};
 
 	const onEntrePressEv = (newNodeLabel, node, nodeKey) => {
 		const newNode = new Node(newNodeLabel, nodeKey);
 		const parentNode = findParentNodeByLabel(tree, node.label);
 		if (parentNode) {
 			parentNode.children.push(newNode);
+
 			setTree([...tree]);
+			updateBin();
 		}
 	};
 	const onCrossClickEv = (node) => {
 		const parentNode = findParentNodeByLabel(tree, node.label);
 		if (parentNode) {
 			parentNode.children.pop();
+
 			setTree([...tree]);
+			updateBin();
 		}
 	};
 
-	return (
+	const FetchingLayout = () => <div className='wrapper'>...Fetching Data from https://jsonbin.io</div>;
+	if (isFetching) return <FetchingLayout />;
+
+	const NoDataLayout = () => <div className='wrapper'>...No data for render https://jsonbin.io</div>;
+	if (!tree || tree.length === 0) return <NoDataLayout />;
+
+	const ErrorLayout = () => <div className='wrapper'>{error}</div>;
+	if (error) return <ErrorLayout />;
+
+	const TreeLayout = () => (
 		<div className='tree'>
 			{tree.map((node, nodeIndex, nodeArr) => (
 				<TreeNode
@@ -141,6 +188,7 @@ const Tree = () => {
 			))}
 		</div>
 	);
+	return <TreeLayout />;
 };
 
 export default Tree;

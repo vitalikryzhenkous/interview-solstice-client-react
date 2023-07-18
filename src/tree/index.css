@@ -4,6 +4,13 @@
     padding: 10px;
     font-family: monospace
 }
+.wrapper {
+    background-color: #efefef;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    font-family: monospace
+}
 
 .visible {
    display: block;
